@@ -7,7 +7,7 @@ const Form = ({ onSubmit }) => {
     const [email, setEmail] = useState(localStorage.getItem('EmailInLocalStorage') || '');
     const [carro, setCarro] = useState(localStorage.getItem('CarroInLocalStorage') || '');
     const [cor, setCor] = useState(localStorage.getItem('CorInLocalStorage') || '');
-    const [valor, setValor] = useState(localStorage.getItem('ValorInLocalStorage') || 0);
+    const [valor, setValor] = useState(localStorage.getItem('ValorInLocalStorage') || '');
     const [total, setTotal] = useState(0)
     const [clientes, setClients] = useState([])
     const [modalIsOpen, setIsOpen] = useState(false);
@@ -32,9 +32,11 @@ const Form = ({ onSubmit }) => {
             setTotalBranco(carroBranco);
 
             let TotalValor = 0 
+
             storedClientes.forEach(
                 cliente => {
                     const valorCarros = parseFloat(cliente.valor)
+                    console.log(valorCarros)
                     TotalValor += valorCarros
                 }
             )
@@ -73,6 +75,23 @@ const Form = ({ onSubmit }) => {
 
         setClients(updatedClientes);
         setTotal(updatedClientes.length);
+
+        const carroPreto = updatedClientes.filter(cliente => cliente.cor.toUpperCase() === 'PRETO').length;
+        setTotalPreto(carroPreto);
+
+        const carroBranco = updatedClientes.filter(cliente => cliente.cor.toUpperCase() === 'BRANCO').length;
+        setTotalBranco(carroBranco);
+
+        let TotalValor = 0 
+
+        updatedClientes.forEach(
+            cliente => {
+                const valorCarros = parseFloat(cliente.valor)
+                console.log(valorCarros)
+                TotalValor += valorCarros
+            }
+        )
+        setTotalValores(TotalValor)
 
         onSubmit(data);
         setNome('');
