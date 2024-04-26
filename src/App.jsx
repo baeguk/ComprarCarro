@@ -14,14 +14,11 @@ const App = () => {
     const handleSubmit = (data) => {
         setClientes([...clientes, data]);
     };
-
     
     const handleDelete = (clientId) => {
       const updatedClient = clientes.filter(cliente => cliente.id !== clientId)
       localStorage.setItem('ClientesInLocalStorage', JSON.stringify(updatedClient))
       setClientes(updatedClient)
-
-      //atualizar os totais
     }
 
     return (

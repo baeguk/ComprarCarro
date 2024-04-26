@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import ReactDOM from 'react-dom';
 import Modal from 'react-modal';
-import Respostas from './Respostas';
 import Swal from 'sweetalert2'
 
 const Form = ({ onSubmit }) => {
@@ -32,7 +30,6 @@ const Form = ({ onSubmit }) => {
 
             const carroPreto = storedClientes.filter(cliente => cliente.cor.toUpperCase() === 'PRETO')
             const TotalCarrosPreto = carroPreto.length
-
             let ValoresCarrosPretos = 0
             carroPreto.forEach(
                 cliente => {
@@ -40,7 +37,6 @@ const Form = ({ onSubmit }) => {
                     ValoresCarrosPretos += valorCarro
                 }
             )
-
             setValoresPreto(ValoresCarrosPretos)
             setTotalPreto(TotalCarrosPreto);
 
@@ -55,12 +51,9 @@ const Form = ({ onSubmit }) => {
                     valorLancer += valores
                 }
             )
-    
             setValoresLancer(valorLancer)
 
-
             let TotalValor = 0 
-
             storedClientes.forEach(
                 cliente => {
                     const valorCarros = parseFloat(cliente.valor)
@@ -69,8 +62,8 @@ const Form = ({ onSubmit }) => {
                 }
             )
             setTotalValores(TotalValor)
-           
         }
+
     }, []);
 
     const handleSubmit = (event) => {
@@ -235,7 +228,6 @@ const Form = ({ onSubmit }) => {
                     <p>Total de valores somente dos carros pretos: {valoresPreto}</p>
                     <p>Total de valores somente do Lancer: {valoresLancer}</p>
                 </div>
-                
             </Modal>
         </div>
     );

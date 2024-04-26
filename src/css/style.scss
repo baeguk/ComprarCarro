@@ -79,9 +79,6 @@
             }
         }
 
-
-       
-
         form {
             margin-top: 20px;
             display: flex;
@@ -96,12 +93,11 @@
                 background-color: #DFD0B8;
                 border-radius: 10px;
             }
-
-            
-            
         }
     }
 }
+
+
 
 .Modal {
     position: absolute;
@@ -126,8 +122,6 @@
             border: none;
             border-radius: 5px;
         }
-
-        
     }
     .totais {
             padding-left: 20px;
@@ -142,16 +136,3 @@
     bottom: 0;
     background-color: rgba(0, 0, 0, 0.466);
   }
-
-/* .ReactModal__Overlay {
-    z-index: 12;
-    .ReactModal__Content {
-        top: 50%;
-        left: 50%;
-        right: auto;
-        bottom: auto;
-        margin-right: -50%;
-        transform: translate(-50%, -50%);
-    }
-}
- */
