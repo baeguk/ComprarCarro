@@ -104,37 +104,23 @@ const Form = ({ onSubmit }) => {
 
         const carroPreto = updatedClientes.filter(cliente => cliente.cor.toUpperCase() === 'PRETO')
         const TotalCarrosPreto = carroPreto.length
-        let ValoresCarrosPretos = 0
-        carroPreto.forEach(
-            cliente => {
-                const valorCarro = parseFloat(cliente.valor)
-                ValoresCarrosPretos += valorCarro
-            }
+        const valorCarro = carroPreto.reduce((valoresCarrosPretos, valor) => 
+            valoresCarrosPretos + valor, 0
         )
-        setValoresPreto(ValoresCarrosPretos)
+        setValoresPreto(valorCarro)
         setTotalPreto(TotalCarrosPreto);
 
         const carroBranco = updatedClientes.filter(cliente => cliente.cor.toUpperCase() === 'BRANCO').length;
         setTotalBranco(carroBranco);
 
         const carroLancer = updatedClientes.filter(cliente => cliente.carro.toUpperCase() === 'LANCER')
-        let valorLancer = 0 
-        carroLancer.forEach(
-            cliente => {
-                const valores = parseFloat(cliente.valor)
-                valorLancer += valores
-            }
+        const valores = carroLancer.reduce((valorLancer, valores) => 
+        valorLancer + valores , 0
         )
+        setValoresLancer(valores)
 
-        setValoresLancer(valorLancer)
-
-        let TotalValor = 0 
-
-        updatedClientes.forEach(
-            cliente => {
-                const valorCarros = parseFloat(cliente.valor)
-                TotalValor += valorCarros
-            }
+        const TotalValor = updatedClientes.reduce((valorCarros, valor) => 
+            valorCarros + valor, 0
         )
         setTotalValores(TotalValor)
 
@@ -144,7 +130,6 @@ const Form = ({ onSubmit }) => {
         setCarro('');
         setCor('');
         setValor('');
-
     };
   
     function openModal() {
