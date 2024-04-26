@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import Modal from 'react-modal';
+import Respostas from './Respostas';
+import Swal from 'sweetalert2'
 
 const Form = ({ onSubmit }) => {
     const [nome, setNome] = useState(localStorage.getItem('NomeInLocalStorage') || '');
@@ -14,6 +16,8 @@ const Form = ({ onSubmit }) => {
     const [totalPreto, setTotalPreto] = useState(0)
     const [totalBranco, setTotalBranco] = useState(0)
     const [totalValores, setTotalValores] = useState(0)
+    const [valoresPreto, setValoresPreto] = useState(0)
+    const [valoresLancer, setValoresLancer] = useState(0)
 
     useEffect(() => {
         const storedClientes = JSON.parse(localStorage.getItem('ClientesInLocalStorage'));
@@ -25,11 +29,35 @@ const Form = ({ onSubmit }) => {
             setCarro('');
             setCor('');
             setValor('');
-            const carroPreto = storedClientes.filter(cliente => cliente.cor.toUpperCase() === 'PRETO').length;
-            setTotalPreto(carroPreto);
+
+            const carroPreto = storedClientes.filter(cliente => cliente.cor.toUpperCase() === 'PRETO')
+            const TotalCarrosPreto = carroPreto.length
+
+            let ValoresCarrosPretos = 0
+            carroPreto.forEach(
+                cliente => {
+                    const valorCarro = parseFloat(cliente.valor)
+                    ValoresCarrosPretos += valorCarro
+                }
+            )
+
+            setValoresPreto(ValoresCarrosPretos)
+            setTotalPreto(TotalCarrosPreto);
 
             const carroBranco = storedClientes.filter(cliente => cliente.cor.toUpperCase() === 'BRANCO').length;
             setTotalBranco(carroBranco);
+
+            const carroLancer = storedClientes.filter(cliente => cliente.carro.toUpperCase() === 'LANCER')
+            let valorLancer = 0 
+            carroLancer.forEach(
+                cliente => {
+                    const valores = parseFloat(cliente.valor)
+                    valorLancer += valores
+                }
+            )
+    
+            setValoresLancer(valorLancer)
+
 
             let TotalValor = 0 
 
@@ -41,24 +69,29 @@ const Form = ({ onSubmit }) => {
                 }
             )
             setTotalValores(TotalValor)
-
+           
         }
     }, []);
 
     const handleSubmit = (event) => {
         event.preventDefault();
         if (!nome || !email || !carro || !cor || !valor) {
-            return alert('Preencha todos os campos');
+            return Swal.fire('Preencha todos os campos');
         }
 
         const validCarros = ['GOL', 'PALIO', 'AZERA', 'SONATA', 'FERRARI', 'LANCER']
         if (!validCarros.includes(carro.toUpperCase())) {
-            return alert('Carro invalido, entre com gol, palio, azera, sonata, ferrari ou lancer')
+            return Swal.fire('Carro invalido, entre com gol, palio, azera, sonata, ferrari ou lancer')
         }
 
         const validCor = ['AZUL', 'VERMELHO', 'BRANCO', 'PRATA', 'PRETO']
         if (!validCor.includes(cor.toUpperCase())) {
-            return alert('Cor invalida, entre com azul, vermelho, branco, prata ou preto')
+            return Swal.fire('Cor invalida, entre com azul, vermelho, branco, prata ou preto')
+        }
+        
+        const validEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+        if (validEmail.test(email) === false) {
+            return Swal.fire('Email não é valido')
         }
 
         const data = {
@@ -76,18 +109,37 @@ const Form = ({ onSubmit }) => {
         setClients(updatedClientes);
         setTotal(updatedClientes.length);
 
-        const carroPreto = updatedClientes.filter(cliente => cliente.cor.toUpperCase() === 'PRETO').length;
-        setTotalPreto(carroPreto);
+        const carroPreto = updatedClientes.filter(cliente => cliente.cor.toUpperCase() === 'PRETO')
+        const TotalCarrosPreto = carroPreto.length
+        let ValoresCarrosPretos = 0
+        carroPreto.forEach(
+            cliente => {
+                const valorCarro = parseFloat(cliente.valor)
+                ValoresCarrosPretos += valorCarro
+            }
+        )
+        setValoresPreto(ValoresCarrosPretos)
+        setTotalPreto(TotalCarrosPreto);
 
         const carroBranco = updatedClientes.filter(cliente => cliente.cor.toUpperCase() === 'BRANCO').length;
         setTotalBranco(carroBranco);
+
+        const carroLancer = updatedClientes.filter(cliente => cliente.carro.toUpperCase() === 'LANCER')
+        let valorLancer = 0 
+        carroLancer.forEach(
+            cliente => {
+                const valores = parseFloat(cliente.valor)
+                valorLancer += valores
+            }
+        )
+
+        setValoresLancer(valorLancer)
 
         let TotalValor = 0 
 
         updatedClientes.forEach(
             cliente => {
                 const valorCarros = parseFloat(cliente.valor)
-                console.log(valorCarros)
                 TotalValor += valorCarros
             }
         )
@@ -101,7 +153,7 @@ const Form = ({ onSubmit }) => {
         setValor('');
 
     };
-
+  
     function openModal() {
         setIsOpen(true);
     }
@@ -145,7 +197,7 @@ const Form = ({ onSubmit }) => {
                 />
                 <input 
                     type="text" 
-                    placeholder='Insira a cor do seu carro' 
+                    placeholder='Insira a cor do carro' 
                     value={cor}
                     onChange={(event) => {
                         setCor(event.target.value);
@@ -153,8 +205,8 @@ const Form = ({ onSubmit }) => {
                     }}
                 />
                 <input 
-                    type="text" 
-                    placeholder='Insira quanto custou seu carro' 
+                    type="number" 
+                    placeholder='Insira quanto custa o carro' 
                     value={valor}
                     onChange={(event) => {
                         setValor(event.target.value);
@@ -180,6 +232,8 @@ const Form = ({ onSubmit }) => {
                     <p>Total de carros pretos: {totalPreto}</p>
                     <p>Total de carros brancos: {totalBranco}</p>
                     <p>Total de valores dos carros: {totalValores}</p>
+                    <p>Total de valores somente dos carros pretos: {valoresPreto}</p>
+                    <p>Total de valores somente do Lancer: {valoresLancer}</p>
                 </div>
                 
             </Modal>
@@ -188,77 +242,3 @@ const Form = ({ onSubmit }) => {
 };
 
 export default Form;
-
-
-/* import React, { useState } from 'react'
-import Respostas from './Respostas'
-
-const Form = () => {
-    const [nome, setNome] = useState('')
-    const [email, setEmail] = useState('')
-    const [carro, setCarro] = useState('')
-    const [cor, setCor] = useState('')
-    const [valor, setValor] = useState('')
-    const [dados, setDados] = useState([])
-
-    const handleSubmit = (event) => {
-        event.preventDefault(); 
-        if (!nome || !email || !carro || !cor || !valor) {
-            return alert('Preencha todos os campos')
-        }
-
-        const data = {
-            id: String(new Date().getTime()),
-            nome,
-            email,
-            carro,
-            cor,
-            valor
-        }
-
-        setDados([...dados, data])
-        console.log(dados)
-        setNome('')
-        setCarro('')
-        setEmail('')
-        setCor('')
-        setValor('')
-    }
-
-  return (
-    <div className='formulario'>
-        <h2>Formulário para compra de carro</h2>
-        <form onSubmit={handleSubmit}>
-            <input 
-            type="text" 
-            placeholder='Insira seu nome' 
-            value={nome}
-            onChange={event => setNome(event.target.value)}/>
-            <input 
-            type="text" 
-            placeholder='Insira seu email' 
-            value={email}
-            onChange={event => setEmail(event.target.value)}/>
-            <input 
-            type="text" 
-            placeholder='Insira seu carro' 
-            value={carro}
-            onChange={event => setCarro(event.target.value)}/>
-            <input 
-            type="text" 
-            placeholder='Insira a cor do seu carro' 
-            value={cor}
-            onChange={event => setCor(event.target.value)}/>
-            <input 
-            type="text" 
-            placeholder='Insira quanto custou seu carro' 
-            value={valor}
-            onChange={event => setValor(event.target.value)}/>
-        </form>
-        <button className='button' type='submit'>Enviar</button>
-        {dados.length > 0 && <Respostas dados={dados} />}
-    </div>
-  )
-}
-
-export default Form */

@@ -15,37 +15,25 @@ const App = () => {
         setClientes([...clientes, data]);
     };
 
+    
+    const handleDelete = (clientId) => {
+      const updatedClient = clientes.filter(cliente => cliente.id !== clientId)
+      localStorage.setItem('ClientesInLocalStorage', JSON.stringify(updatedClient))
+      setClientes(updatedClient)
+
+      //atualizar os totais
+    }
+
     return (
         <div className='container'>
           <div className="colForm">
            <Form onSubmit={handleSubmit} />
           </div>
           <div className="col">
-           {clientes.length > 0 && <Respostas dados={clientes} />}
+           {clientes.length > 0 && <Respostas dados={clientes} onDelete={handleDelete}/>}
           </div>
         </div>
     );
 };
 
 export default App
-
-/* import { useState } from 'react'
-import './css/style.css'
-import Form from './components/Form'
-import Respostas from './components/Respostas'
-
-function App() {
-  return (
-    <div className='container'>
-      <div className="colForm">
-        <Form />
-      </div>
-      <div className="col">
-        <Respostas />
-      </div>
-    </div>
-  )
-}
-
-export default App
- */
